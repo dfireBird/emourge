@@ -1,18 +1,23 @@
-import { AkairoClient, CommandHandler } from "discord-akairo";
+import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 
 /**
  * The bot class with client and command handlers
  */
 class Bot {
     /**
+     * Akairo Client instance
+     */
+    private client: AkairoClient;
+
+    /**
      * Command Handler instance
      */
     private commandHandler: CommandHandler;
 
-    /**
-     * Akairo Client instance
+    /*
+     * Listener Handler instance
      */
-    private client: AkairoClient;
+    private listenerHandler: ListenerHandler;
 
     /**
      * Initialize the bot with token
@@ -23,11 +28,16 @@ class Bot {
         this.client = new AkairoClient({ ownerID: process.env.BOT_OWNER_ID });
 
         this.commandHandler = new CommandHandler(this.client, {
-            directory: "./commands/",
+            directory: `${__dirname}/commands/`,
             prefix: process.env.PREFIX,
         });
 
+        this.listenerHandler = new ListenerHandler(this.client, {
+            directory: `${__dirname}/listeners/`,
+        });
+
         this.client.login(token);
+        this.listenerHandler.loadAll();
     }
 }
 
