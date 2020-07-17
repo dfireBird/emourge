@@ -1,4 +1,10 @@
-import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import {
+    AkairoClient,
+    CommandHandler,
+    ListenerHandler,
+    MongooseProvider,
+} from "discord-akairo";
+import { emojiFrequencyModel } from "./emojiModel";
 
 /**
  * The bot class with client and command handlers
@@ -14,10 +20,15 @@ class Bot {
      */
     private commandHandler: CommandHandler;
 
-    /*
+    /**
      * Listener Handler instance
      */
     private listenerHandler: ListenerHandler;
+
+    /**
+     * Mongoose provide instance for recording emoji frequency
+     */
+    private emojiFrequency: MongooseProvider;
 
     /**
      * Initialize the bot with token
@@ -36,8 +47,20 @@ class Bot {
             directory: `${__dirname}/listeners/`,
         });
 
-        this.client.login(token);
+        this.emojiFrequency = new MongooseProvider(emojiFrequencyModel);
+
+        this.login(token);
         this.listenerHandler.loadAll();
+    }
+
+    /*
+     * Wrapper around AkairoClient login method;
+     *
+     * @param token
+     */
+    private async login(token: string) {
+        await this.emojiFrequency.init();
+        await this.client.login(token);
     }
 }
 
