@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@types/mongoose": "^5.7.32",
-    "discord-akairo": "^8.0.0",
+    "discord-akairo": "https://github.com/discord-akairo/discord-akairo.git",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "mongoose": "^5.9.24"
