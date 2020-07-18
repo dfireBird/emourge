@@ -21,11 +21,6 @@ class Bot extends AkairoClient {
     private listenerHandler: ListenerHandler;
 
     /**
-     * Mongoose provide instance for recording emoji frequency
-     */
-    private emojiFrequency: MongooseProvider;
-
-    /**
      * Initialize the bot with token
      *
      * @param token
@@ -42,9 +37,8 @@ class Bot extends AkairoClient {
             directory: `${__dirname}/listeners/`,
         });
 
-        this.emojiFrequency = new MongooseProvider(emojiFrequencyModel);
-
         this.login(token);
+        this.commandHandler.loadAll();
         this.listenerHandler.loadAll();
     }
 
@@ -54,7 +48,6 @@ class Bot extends AkairoClient {
      * @param token
      */
     public async login(token: string) {
-        await this.emojiFrequency.init();
         return super.login(token);
     }
 }
