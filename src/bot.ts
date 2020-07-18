@@ -7,14 +7,9 @@ import {
 import { emojiFrequencyModel } from "./emojiModel";
 
 /**
- * The bot class with client and command handlers
+ * The bot class extends client and with command handlers
  */
-class Bot {
-    /**
-     * Akairo Client instance
-     */
-    private client: AkairoClient;
-
+class Bot extends AkairoClient {
     /**
      * Command Handler instance
      */
@@ -36,14 +31,14 @@ class Bot {
      * @param token
      */
     constructor(token: string) {
-        this.client = new AkairoClient({ ownerID: process.env.BOT_OWNER_ID });
+        super({ ownerID: process.env.BOT_OWNER_ID });
 
-        this.commandHandler = new CommandHandler(this.client, {
+        this.commandHandler = new CommandHandler(this, {
             directory: `${__dirname}/commands/`,
             prefix: process.env.PREFIX,
         });
 
-        this.listenerHandler = new ListenerHandler(this.client, {
+        this.listenerHandler = new ListenerHandler(this, {
             directory: `${__dirname}/listeners/`,
         });
 
@@ -58,9 +53,9 @@ class Bot {
      *
      * @param token
      */
-    private async login(token: string) {
+    public async login(token: string) {
         await this.emojiFrequency.init();
-        await this.client.login(token);
+        return super.login(token);
     }
 }
 
