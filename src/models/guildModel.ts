@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IEmojiFrequency {
-    emojiId: String;
-    emojiName: String;
-    frequency: Number;
+    emojiId: string;
+    emojiName: string;
+    frequency: number;
 }
 
 export interface IGuild extends Document {
