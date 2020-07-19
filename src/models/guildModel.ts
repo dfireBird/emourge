@@ -6,12 +6,12 @@ export interface IEmojiFrequency {
     frequency: Number;
 }
 
-export interface IEmojiFrequencyDb extends Document {
+export interface IGuild extends Document {
     id: string;
     emojiFrequency: IEmojiFrequency;
 }
 
-const emojiFrequencySchema = new Schema({
+const guildSchema = new Schema({
     id: {
         type: String,
         required: true,
@@ -25,7 +25,4 @@ const emojiFrequencySchema = new Schema({
     ],
 });
 
-export const emojiFrequencyModel = mongoose.model<IEmojiFrequencyDb>(
-    "emojiFrequency",
-    emojiFrequencySchema
-);
+export const guildModel = mongoose.model<IGuild>("guild", guildSchema);

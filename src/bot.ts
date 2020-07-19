@@ -1,10 +1,5 @@
-import {
-    AkairoClient,
-    CommandHandler,
-    ListenerHandler,
-    MongooseProvider,
-} from "discord-akairo";
-import { emojiFrequencyModel } from "./emojiModel";
+import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import { guildModel } from "./models/guildModel";
 
 /**
  * The bot class extends client and with command handlers
