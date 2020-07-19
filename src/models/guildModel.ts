@@ -8,7 +8,7 @@ export interface IEmojiFrequency {
 
 export interface IGuild extends Document {
     id: string;
-    emojiFrequency: IEmojiFrequency;
+    emojiFrequency: Array<IEmojiFrequency>;
 }
 
 const guildSchema = new Schema({
