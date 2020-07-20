@@ -32,26 +32,22 @@ export default class EmojiListener extends Listener {
         const emojiManager = msg.guild.emojis;
         for (const emojiId of emojiIds) {
             let emoji = emojiManager.resolve(emojiId);
-            if (emoji === null) return;
+            if (emoji === null) continue;
 
-            if (emoji.guild === msg.guild) {
-                const guild = await guildModel
-                    .findOne({ id: msg.guild.id })
-                    .exec();
+            const guild = await guildModel.findOne({ id: msg.guild.id }).exec();
 
-                if (guild === null) return;
+            if (guild === null) continue;
 
-                const index = guild.emojiFrequency.findIndex((e) => {
-                    if (emoji === null) return;
-                    return e.emojiId == emoji.id;
-                });
+            const index = guild.emojiFrequency.findIndex((e) => {
+                if (emoji === null) return;
+                return e.emojiId == emoji.id;
+            });
 
-                guild.emojiFrequency[index].frequency++;
-                try {
-                    await guild.save();
-                } catch (err) {
-                    console.log(err);
-                }
+            guild.emojiFrequency[index].frequency++;
+            try {
+                await guild.save();
+            } catch (err) {
+                console.log(err);
             }
         }
     }
