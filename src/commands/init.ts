@@ -28,7 +28,7 @@ class InitCommand extends Command {
         });
 
         guild.save().then(() => {
-            msg.reply("Successfully Initialized");
+            msg.channel.send("Successfully Initialized");
         });
     }
 }
