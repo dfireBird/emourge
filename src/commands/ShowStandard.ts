@@ -17,6 +17,7 @@ class ShowStandardCommand extends Command {
     }
 
     public exec(msg: Message) {
+        const prefix = process.env.PREFIX;
         if (msg.guild === null) return;
 
         const embed = new MessageEmbed()
@@ -28,7 +29,12 @@ class ShowStandardCommand extends Command {
             .findOne({ id: msg.guild.id })
             .exec()
             .then((result) => {
-                if (result === null) return;
+                if (result === null) {
+                    msg.channel.send(
+                        `Your server is not initialized. Use \`${prefix}init\` to start recording.`
+                    );
+                    return;
+                }
                 const emojis = result.emojiFrequency.sort(
                     (a, b) => a.frequency - b.frequency
                 );
