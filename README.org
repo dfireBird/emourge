@@ -35,4 +35,4 @@ npm start
 #+END_SRC
 
 * License
-This projects uses a MIT, which can be viewed [[file:LICENSE][here]].
+This projects uses a MIT license, which can be viewed [[file:LICENSE][here]].
