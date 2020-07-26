@@ -6,6 +6,7 @@ Emourge is discord bot that counts emojis in a message, the bot is built in
 Typescript using Discord.js and Discord-akairo.
 
 * Deploying
+** Prerequisite
 Create a bot in Discord Developer portal. See more on how to create a bot [[https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot][here]].
 
 Clone the repo
@@ -18,7 +19,7 @@ Create a =.env= file using the =.env.example=.
 ** Docker method
 You can easily deploy the bot with Docker.
 Install =docker= and =docker-compose= in your system.
-After the following the above steps run the following command
+Make sure you completed the prerequisite and follow the steps below:
 #+BEGIN_SRC bash
   docker-compose up
 #+END_SRC
@@ -26,8 +27,8 @@ After the following the above steps run the following command
 ** Node method
 If you don't have docker or you don't how know how to use it. You can also
 deploy the bot using Node.js
-Follow the above step mentioned before Docker mode and use the following
-command to deploy the bot
+Make sure you completed the prerequisite and add a entry in =.env=
+file named =MONGO_HOST=<your_host_of_db>= before you follow the steps below
 #+BEGIN_SRC bash
 npm install
 npm start
