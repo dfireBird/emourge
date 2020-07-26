@@ -4,9 +4,11 @@ import "dotenv/config";
 
 const username = process.env.MONGO_INITDB_ROOT_USERNAME;
 const password = process.env.MONGO_INITDB_ROOT_PASSWORD;
+const host = process.env.MONGO_HOST ? process.env.MONGO_HOST : "db";
+console.log(host);
 
 mongoose
-    .connect(`mongodb://${username}:${password}@db:27017/`, {
+    .connect(`mongodb://${username}:${password}@${host}:27017/`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
