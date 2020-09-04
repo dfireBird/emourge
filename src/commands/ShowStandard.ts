@@ -26,31 +26,54 @@ class ShowStandardCommand extends Command {
 
         const emojiManager = msg.guild.emojis;
         guildModel
-            .findOne({ id: msg.guild.id })
-            .exec()
+            .aggregate([
+                {
+                    $match: { id: msg.guild.id },
+                },
+                {
+                    $project: {
+                        emojiFrequency: {
+                            $filter: {
+                                input: "$emojiFrequency",
+                                as: "emoji",
+                                cond: { $eq: ["$$emoji.animated", false] },
+                            },
+                        },
+                    },
+                },
+                { $unwind: "$emojiFrequency" },
+                { $sort: { "emojiFrequency.frequency": 1 } },
+                {
+                    $group: {
+                        _id: "$_id",
+                        id: { $first: "$id" },
+                        emojiFrequency: { $push: "$emojiFrequency" },
+                    },
+                },
+                {
+                    $project: {
+                        emojiFrequency: {
+                            $slice: ["$emojiFrequency", 0, 10],
+                        },
+                    },
+                },
+                { $limit: 1 },
+            ])
             .then((result) => {
-                if (result === null) {
+                if (result[0] === null) {
                     msg.channel.send(
                         `Your server is not initialized. Use \`${prefix}init\` to start recording.`
                     );
                     return;
                 }
-                const emojis = result.emojiFrequency.sort(
-                    (a, b) => a.frequency - b.frequency
-                );
 
-                let i = 0;
+                const emojis = result[0].emojiFrequency;
                 for (const e of emojis) {
-                    if (i > 10) break;
                     const emoji = emojiManager.resolve(e.emojiId);
-                    if (emoji?.animated === false) {
-                        embed.addField(
-                            `${e.emojiName}:  ${emoji}`,
-                            `${e.frequency}`
-                        );
-
-                        i++;
-                    }
+                    embed.addField(
+                        `${e.emojiName}:  ${emoji}`,
+                        `${e.frequency}`
+                    );
                 }
 
                 msg.channel.send(embed);
