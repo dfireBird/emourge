@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IEmojiFrequency {
     emojiId: string;
     emojiName: string;
+    animated: boolean;
     frequency: number;
 }
 
@@ -20,6 +21,7 @@ const guildSchema = new Schema({
         {
             emojiId: String,
             emojiName: String,
+            animated: Boolean,
             frequency: Number,
         },
     ],

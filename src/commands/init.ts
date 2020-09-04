@@ -19,6 +19,7 @@ class InitCommand extends Command {
             guildEmojis.push({
                 emojiId: emoji.id,
                 emojiName: emoji.name,
+                animated: emoji.animated,
                 frequency: 0,
             });
         }

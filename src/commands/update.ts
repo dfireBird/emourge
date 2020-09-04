@@ -26,6 +26,7 @@ class UpdateCommand extends Command {
                 return {
                     emojiId: emoji.id,
                     emojiName: emoji.name,
+                    animated: emoji.animated,
                     frequency: 0,
                 };
             }
