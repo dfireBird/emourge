@@ -7,10 +7,13 @@ const password = process.env.MONGO_INITDB_ROOT_PASSWORD;
 const host = process.env.MONGO_HOST ? process.env.MONGO_HOST : "db";
 
 mongoose
-    .connect(`mongodb://${username}:${password}@${host}:27017/`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
+    .connect(
+        `mongodb://${username}:${password}@${host}:27017/${process.env.MONGO_INITDB_DATABASE}`,
+        {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        }
+    )
     .then(() => {
         console.log("✅ Connected to database");
         new Bot(process.env.BOT_TOKEN || "");

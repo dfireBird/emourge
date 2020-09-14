@@ -9,6 +9,7 @@ services:
     ports:
       - 27017:27017
     volumes:
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
       - emourge:/data/db
 
   bot:
