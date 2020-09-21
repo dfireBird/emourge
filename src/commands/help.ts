@@ -25,6 +25,10 @@ class HelpCommand extends Command {
                     value: "Show least used standard emojis",
                 },
                 {
+                    name: "`most`",
+                    value: "Show most used emojis",
+                },
+                {
                     name: "`update`",
                     value: "Updates the emoji information on database",
                 }
