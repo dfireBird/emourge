@@ -25,6 +25,7 @@ class Bot extends AkairoClient {
 
         this.commandHandler = new CommandHandler(this, {
             directory: `${__dirname}/commands/`,
+            allowMention: true,
             prefix: process.env.PREFIX,
         });
 

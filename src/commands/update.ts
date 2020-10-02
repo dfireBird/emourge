@@ -7,6 +7,8 @@ class UpdateCommand extends Command {
         super("update", {
             aliases: ["update"],
             channel: "guild",
+            clientPermissions: ["MANAGE_EMOJIS"],
+            userPermissions: ["MANAGE_EMOJIS"],
         });
     }
 
