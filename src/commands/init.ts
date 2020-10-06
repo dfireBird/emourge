@@ -9,7 +9,7 @@ class InitCommand extends Command {
         });
     }
 
-    public exec(msg: Message) {
+    public async exec(msg: Message) {
         if (!msg.guild) {
             return;
         }
@@ -22,6 +22,10 @@ class InitCommand extends Command {
                 animated: emoji.animated,
                 frequency: 0,
             });
+        }
+        if ((await guildModel.findOne({ id: msg.guild.id }).exec()) !== null) {
+            msg.channel.send("**Already Initialized**");
+            return;
         }
         const guild = new guildModel({
             id: msg.guild.id,
