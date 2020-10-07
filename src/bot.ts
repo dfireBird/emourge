@@ -1,4 +1,9 @@
-import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import {
+    AkairoClient,
+    CommandHandler,
+    ListenerHandler,
+    InhibitorHandler,
+} from "discord-akairo";
 import { guildModel } from "./models/guildModel";
 
 /**
@@ -14,6 +19,11 @@ class Bot extends AkairoClient {
      * Listener Handler instance
      */
     private listenerHandler: ListenerHandler;
+
+    /*
+     * Inhibitor Handler instance
+     */
+    private inhibitorHandler: InhibitorHandler;
 
     /**
      * Initialize the bot with token
@@ -33,9 +43,16 @@ class Bot extends AkairoClient {
             directory: `${__dirname}/listeners/`,
         });
 
+        this.inhibitorHandler = new InhibitorHandler(this, {
+            directory: `${__dirname}/inhibitors/`,
+        });
+
         this.login(token);
         this.commandHandler.loadAll();
+        this.inhibitorHandler.loadAll();
         this.listenerHandler.loadAll();
+
+        this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
     }
 
     /*
