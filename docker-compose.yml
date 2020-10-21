@@ -12,6 +12,16 @@ services:
       - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
       - emourge:/data/db
 
+  db_postgres:
+    image: postgres
+    container_name: "emourge_postgres"
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres:/var/lib/postgessql
+
   bot:
     build:
       context: "."
@@ -25,3 +35,4 @@ services:
 
 volumes:
   emourge:
+  postgres:
