@@ -1,8 +1,10 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
-import { guildModel } from "../models/guildModel";
+import { getRepository } from "typeorm";
+import { Emoji } from "../entities/Emoji";
 
 class ShowStandardCommand extends Command {
+    private emojiRepo = getRepository(Emoji);
     constructor() {
         super("show-standard", {
             aliases: [
@@ -16,8 +18,7 @@ class ShowStandardCommand extends Command {
         });
     }
 
-    public exec(msg: Message) {
-        const prefix = process.env.PREFIX;
+    public async exec(msg: Message) {
         if (msg.guild === null) return;
 
         const embed = new MessageEmbed()
@@ -25,59 +26,23 @@ class ShowStandardCommand extends Command {
             .setTitle("Least used emojis");
 
         const emojiManager = msg.guild.emojis;
-        guildModel
-            .aggregate([
-                {
-                    $match: { id: msg.guild.id },
-                },
-                {
-                    $project: {
-                        emojiFrequency: {
-                            $filter: {
-                                input: "$emojiFrequency",
-                                as: "emoji",
-                                cond: { $eq: ["$$emoji.animated", false] },
-                            },
-                        },
-                    },
-                },
-                { $unwind: "$emojiFrequency" },
-                { $sort: { "emojiFrequency.frequency": 1 } },
-                {
-                    $group: {
-                        _id: "$_id",
-                        id: { $first: "$id" },
-                        emojiFrequency: { $push: "$emojiFrequency" },
-                    },
-                },
-                {
-                    $project: {
-                        emojiFrequency: {
-                            $slice: ["$emojiFrequency", 0, 10],
-                        },
-                    },
-                },
-                { $limit: 1 },
-            ])
-            .then((result) => {
-                if (result[0] === null) {
-                    msg.channel.send(
-                        `Your server is not initialized. Use \`${prefix}init\` to start recording.`
-                    );
-                    return;
-                }
+        const emojis = await this.emojiRepo.find({
+            where: {
+                guildId: msg.guild.id,
+                animated: false,
+            },
+            order: {
+                frequency: "ASC",
+            },
+            take: 10,
+        });
 
-                const emojis = result[0].emojiFrequency;
-                for (const e of emojis) {
-                    const emoji = emojiManager.resolve(e.emojiId);
-                    embed.addField(
-                        `${e.emojiName}:  ${emoji}`,
-                        `${e.frequency}`
-                    );
-                }
+        for (const e of emojis) {
+            const emoji = emojiManager.resolve(e.id);
+            embed.addField(`${e.name}:  ${emoji}`, `${e.frequency}`);
+        }
 
-                msg.channel.send(embed);
-            });
+        msg.channel.send(embed);
     }
 }
 
