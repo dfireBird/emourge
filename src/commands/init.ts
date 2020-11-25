@@ -1,8 +1,12 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import { IEmojiFrequency, guildModel } from "../models/guildModel";
+import { getRepository } from "typeorm";
+import { Guild } from "../entities/Guild";
+import { Emoji } from "../entities/Emoji";
 
 class InitCommand extends Command {
+    private guildRepo = getRepository(Guild);
+    private emojiRepo = getRepository(Emoji);
     constructor() {
         super("init", {
             aliases: ["init", "start"],
@@ -14,25 +18,24 @@ class InitCommand extends Command {
             return;
         }
         const emojis = msg.guild.emojis.cache;
-        let guildEmojis: IEmojiFrequency[] = [];
+        if ((await this.guildRepo.findOne(msg.guild.id)) === undefined) {
+            return msg.channel.send("**Already Initialized**");
+        }
+        const guildEmojis: Emoji[] = [];
         for (const [_key, emoji] of emojis) {
-            guildEmojis.push({
-                emojiId: emoji.id,
-                emojiName: emoji.name,
+            const newEmoji = this.emojiRepo.create({
+                id: emoji.id,
+                name: emoji.name,
                 animated: emoji.animated,
                 frequency: 0,
             });
+            guildEmojis.push(await this.emojiRepo.save(newEmoji));
         }
-        if ((await guildModel.findOne({ id: msg.guild.id }).exec()) !== null) {
-            msg.channel.send("**Already Initialized**");
-            return;
-        }
-        const guild = new guildModel({
+        const guild = this.guildRepo.create({
             id: msg.guild.id,
-            emojiFrequency: guildEmojis,
+            emojis: guildEmojis,
         });
-
-        guild.save().then(() => {
+        this.guildRepo.save(guild).then(() => {
             msg.channel.send("Successfully Initialized");
         });
     }
