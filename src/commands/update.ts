@@ -1,8 +1,11 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import { guildModel, IEmojiFrequency } from "../models/guildModel";
+import { getRepository } from "typeorm";
+import { Guild } from "../entities/Guild";
+import { Emoji } from "../entities/Emoji";
 
 class UpdateCommand extends Command {
+    private guildRepo = getRepository(Guild);
     constructor() {
         super("update", {
             aliases: ["update"],
@@ -13,28 +16,34 @@ class UpdateCommand extends Command {
     public async exec(msg: Message) {
         if (msg.guild === null) return;
         const emojis = msg.guild.emojis.cache;
-        const guild = await guildModel.findOne({ id: msg.guild.id }).exec();
-        if (guild === null) return;
+        // const guild = await guildModel.findOne({ id: msg.guild.id }).exec();
+        const guild = await this.guildRepo.findOne(msg.guild.id, {
+            relations: ["emoji"],
+        });
+        if (guild === undefined) return;
 
-        const updatedEmojis: IEmojiFrequency[] = emojis.map((emoji) => {
-            const found = guild.emojiFrequency.find(
-                (dbEmoji) => dbEmoji.emojiId === emoji.id
+        const updatedEmojis: Emoji[] = emojis.map((emoji) => {
+            const found = guild.emojis.find(
+                (dbEmoji) => dbEmoji.id === emoji.id
             );
             if (found) {
                 return found;
             } else {
-                return {
-                    emojiId: emoji.id,
-                    emojiName: emoji.name,
+                const newEmoji = getRepository(Emoji).create({
+                    id: emoji.id,
+                    guild: guild,
+                    name: emoji.name,
                     animated: emoji.animated,
                     frequency: 0,
-                };
+                });
+                getRepository(Emoji).save(newEmoji);
+                return newEmoji;
             }
         });
 
-        guild.emojiFrequency = updatedEmojis;
+        guild.emojis = updatedEmojis;
         try {
-            await guild.save();
+            await this.guildRepo.save(guild);
         } catch (err) {
             console.log(err);
         }
