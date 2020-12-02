@@ -1,9 +1,11 @@
 import { Listener } from "discord-akairo";
 import { Message } from "discord.js";
+import { getRepository } from "typeorm";
+import { Emoji } from "../entities/Emoji";
 import { extractEmoji } from "../utils";
-import { guildModel } from "../models/guildModel";
 
 export default class EmojiListener extends Listener {
+    private emojiRepo = getRepository(Emoji);
     constructor() {
         super("message", {
             emitter: "client",
@@ -34,18 +36,12 @@ export default class EmojiListener extends Listener {
             let emoji = emojiManager.resolve(emojiId);
             if (emoji === null) continue;
 
-            const guild = await guildModel.findOne({ id: msg.guild.id }).exec();
+            const dbEmoji = await this.emojiRepo.findOne(emojiId);
+            if (dbEmoji === undefined) continue;
+            dbEmoji.frequency += 1;
 
-            if (guild === null) continue;
-
-            const index = guild.emojiFrequency.findIndex((e) => {
-                if (emoji === null) return;
-                return e.emojiId == emoji.id;
-            });
-
-            guild.emojiFrequency[index].frequency++;
             try {
-                await guild.save();
+                await this.emojiRepo.save(dbEmoji);
             } catch (err) {
                 console.log(err);
             }
