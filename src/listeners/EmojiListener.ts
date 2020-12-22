@@ -1,6 +1,6 @@
 import { Listener } from "discord-akairo";
 import { Message } from "discord.js";
-import { extractEmoji } from "../utils";
+import { extractEmoji, extractReaction } from "../utils";
 import { guildModel } from "../models/guildModel";
 
 export default class EmojiListener extends Listener {
@@ -13,6 +13,7 @@ export default class EmojiListener extends Listener {
 
     public exec(msg: Message) {
         this.storeEmoji(msg);
+        extractReaction(msg);
     }
 
     /*
