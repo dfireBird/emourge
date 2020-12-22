@@ -31,12 +31,12 @@ export function extractReaction(message: Message) {
 
     for (let reaction_constructor of reactionsManager.cache) {
         let ObjReactionMessage = reaction_constructor[1];
-        let emoji = ObjReactionMessage.emoji.identifier;
-        
-        if(emoji in objreactions) {
-            objreactions[emoji] = objreactions[emoji] + 1;
+        let emoji = ObjReactionMessage.emoji.id;
+
+        if(emoji! in objreactions) {
+            objreactions[emoji!] = objreactions[emoji!] + 1;
         } else {
-            objreactions[emoji] = 1;
+            objreactions[emoji!] = 1;
         }
     }
 
