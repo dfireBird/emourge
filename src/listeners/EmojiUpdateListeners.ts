@@ -1,8 +1,10 @@
 import { Listener } from "discord-akairo";
 import { GuildEmoji } from "discord.js";
-import { guildModel } from "../models/guildModel";
+import { getRepository } from "typeorm";
+import { Emoji } from "../entities/Emoji";
 
 export default class EmojiUpdateListener extends Listener {
+    private emojiRepository = getRepository(Emoji);
     constructor() {
         super("update", {
             emitter: "client",
@@ -11,21 +13,13 @@ export default class EmojiUpdateListener extends Listener {
     }
 
     public async exec(old_emoji: GuildEmoji, new_emoji: GuildEmoji) {
-        const guild = await guildModel
-            .findOne({ id: old_emoji.guild.id })
-            .exec();
-        if (guild === null) return;
+        const oldDbEmoji = await this.emojiRepository.findOne(old_emoji.id);
+        if (oldDbEmoji === undefined) return;
 
-        const index = guild.emojiFrequency.findIndex(
-            (i) => i.emojiId === old_emoji.id
-        );
-
-        if (index > -1) {
-            guild.emojiFrequency[index].emojiName = new_emoji.name;
-        }
+        oldDbEmoji.name = new_emoji.name;
 
         try {
-            await guild.save();
+            await this.emojiRepository.save(oldDbEmoji);
         } catch (err) {
             console.log(err);
         }
