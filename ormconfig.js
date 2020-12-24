@@ -6,6 +6,6 @@ module.exports = {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
-    entities: ["src/entity/**/*.ts"],
-    synchronize: true,
+    entities: ["src/entities/**/*.ts"],
+    synchronize: false,
 };
