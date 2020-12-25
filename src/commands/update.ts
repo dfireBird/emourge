@@ -16,9 +16,8 @@ class UpdateCommand extends Command {
     public async exec(msg: Message) {
         if (msg.guild === null) return;
         const emojis = msg.guild.emojis.cache;
-        // const guild = await guildModel.findOne({ id: msg.guild.id }).exec();
         const guild = await this.guildRepo.findOne(msg.guild.id, {
-            relations: ["emoji"],
+            relations: ["emojis"],
         });
         if (guild === undefined) return;
 

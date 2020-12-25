@@ -18,7 +18,7 @@ export default class EmojiCreateListener extends Listener {
         console.log("Emoji Create");
         // const guild = await guildModel.findOne({ id: emoji.guild.id }).exec();
         const guild = await this.guildRepository.findOne(emoji.guild.id, {
-            relations: ["emoji"],
+            relations: ["emojis"],
         });
         if (guild === undefined) return;
 
