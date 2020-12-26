@@ -37,7 +37,10 @@ export default class EmojiListener extends Listener {
             let emoji = emojiManager.resolve(emojiId);
             if (emoji === null) continue;
 
-            const dbEmoji = await this.emojiRepo.findOne(emojiId);
+            const dbEmoji = await this.emojiRepo.findOne({
+                id: emojiId,
+                guildId: msg.guild.id,
+            });
             if (dbEmoji === undefined) continue;
             dbEmoji.frequency += 1;
 
