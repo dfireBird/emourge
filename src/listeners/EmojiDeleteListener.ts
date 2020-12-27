@@ -15,21 +15,13 @@ export default class EmojiDeleteListener extends Listener {
     }
 
     public async exec(emoji: GuildEmoji) {
-        const guild = await this.guildRepository.findOne(emoji.guild.id, {
-            relations: ["emoji"],
+        const dbEmoji = await this.emojiRepository.findOne({
+            id: emoji.id,
+            guildId: emoji.guild.id,
         });
-        if (guild === undefined) return;
-
-        const index = guild.emojis.findIndex((i) => i.id === emoji.id);
-
-        if (index > -1) {
-            guild.emojis.splice(index, 1);
-        }
-        const dbEmoji = await this.emojiRepository.findOne(emoji.id);
         if (dbEmoji === undefined) return;
 
         try {
-            await this.guildRepository.save(guild);
             await this.emojiRepository.remove(dbEmoji);
         } catch (err) {
             console.log(err);
