@@ -4,7 +4,6 @@ import {
     ListenerHandler,
     InhibitorHandler,
 } from "discord-akairo";
-import { guildModel } from "./models/guildModel";
 
 /**
  * The bot class extends client and with command handlers
