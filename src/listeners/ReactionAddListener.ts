@@ -3,10 +3,10 @@ import { MessageReaction } from "discord.js";
 import { getRepository } from "typeorm";
 import { Emoji } from "../entities/Emoji";
 
-export default class MessageReactionListeners extends Listener {
+export default class ReactionAddListener extends Listener {
     private emojiRepo = getRepository(Emoji);
     constructor() {
-        super("reaction", {
+        super("reactionAdd", {
             emitter: "client",
             event: "messageReactionAdd",
         });
