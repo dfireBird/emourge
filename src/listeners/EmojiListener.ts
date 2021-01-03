@@ -2,7 +2,7 @@ import { Listener } from "discord-akairo";
 import { Message } from "discord.js";
 import { getRepository } from "typeorm";
 import { Emoji } from "../entities/Emoji";
-import { extractEmoji, extractReaction } from "../utils";
+import { extractEmoji } from "../utils";
 
 export default class EmojiListener extends Listener {
     private emojiRepo = getRepository(Emoji);
@@ -15,7 +15,6 @@ export default class EmojiListener extends Listener {
 
     public exec(msg: Message) {
         this.storeEmoji(msg);
-        extractReaction(msg);
     }
 
     /*
