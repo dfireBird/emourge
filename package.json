@@ -1,6 +1,6 @@
 {
   "name": "emourge",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "Discord bot which determines which emoji to purge in a server.",
   "main": "dist/index.js",
   "scripts": {
