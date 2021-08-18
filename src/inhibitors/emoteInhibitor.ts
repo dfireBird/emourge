@@ -1,5 +1,5 @@
 import { Inhibitor } from "discord-akairo";
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 
 class EmoteInhibitor extends Inhibitor {
     constructor() {
@@ -15,7 +15,9 @@ class EmoteInhibitor extends Inhibitor {
             return false;
         }
 
-        return !author.hasPermission("MANAGE_EMOJIS");
+        return !author.permissions.has([
+            Permissions.FLAGS.MANAGE_EMOJIS_AND_STICKERS,
+        ]);
     }
 }
 

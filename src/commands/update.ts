@@ -31,8 +31,8 @@ class UpdateCommand extends Command {
                 const newEmoji = getRepository(Emoji).create({
                     id: emoji.id,
                     guild: guild,
-                    name: emoji.name,
-                    animated: emoji.animated,
+                    name: emoji.name ?? "",
+                    animated: emoji.animated ?? false,
                     frequency: 0,
                 });
                 getRepository(Emoji).save(newEmoji);

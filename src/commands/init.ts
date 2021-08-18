@@ -25,8 +25,8 @@ class InitCommand extends Command {
         for (const [_key, emoji] of emojis) {
             const newEmoji = this.emojiRepo.create({
                 id: emoji.id,
-                name: emoji.name,
-                animated: emoji.animated,
+                name: emoji.name ?? "",
+                animated: emoji.animated ?? false,
                 frequency: 0,
             });
             guildEmojis.push(newEmoji);

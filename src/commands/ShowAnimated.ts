@@ -46,7 +46,7 @@ class ShowAnimatedCommand extends Command {
             embed.addField(`${e.name}:  ${emoji}`, `${e.frequency}`);
         }
 
-        msg.channel.send(embed);
+        msg.channel.send({ embeds: [embed] });
     }
 }
 

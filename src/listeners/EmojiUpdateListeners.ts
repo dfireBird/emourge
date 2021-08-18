@@ -18,7 +18,7 @@ export default class EmojiUpdateListener extends Listener {
         });
         if (oldDbEmoji === undefined) return;
 
-        oldDbEmoji.name = new_emoji.name;
+        oldDbEmoji.name = new_emoji.name ?? "";
 
         try {
             await this.emojiRepository.save(oldDbEmoji);

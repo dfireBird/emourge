@@ -4,6 +4,7 @@ import {
     ListenerHandler,
     InhibitorHandler,
 } from "discord-akairo";
+import { Intents } from "discord.js";
 
 /**
  * The bot class extends client and with command handlers
@@ -30,7 +31,15 @@ class Bot extends AkairoClient {
      * @param token
      */
     constructor(token: string) {
-        super({ ownerID: process.env.BOT_OWNER_ID });
+        super({
+            ownerID: process.env.BOT_OWNER_ID,
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+            ],
+        });
 
         this.commandHandler = new CommandHandler(this, {
             directory: `${__dirname}/commands/`,

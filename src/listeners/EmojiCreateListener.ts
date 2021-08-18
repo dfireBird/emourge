@@ -25,8 +25,8 @@ export default class EmojiCreateListener extends Listener {
         const newEmoji = this.emojiRepository.create({
             id: emoji.id,
             guild: guild,
-            name: emoji.name,
-            animated: emoji.animated,
+            name: emoji.name ?? "",
+            animated: emoji.animated ?? false,
             frequency: 0,
         });
         guild.emojis.push(newEmoji);
