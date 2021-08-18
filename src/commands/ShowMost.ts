@@ -2,9 +2,11 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { getRepository } from "typeorm";
 import { Emoji } from "../entities/Emoji";
+import { Guild } from "../entities/Guild";
 
 class ShowMostCommand extends Command {
     private emojiRepo = getRepository(Emoji);
+    private guildRepo = getRepository(Guild);
     constructor() {
         super("most", {
             aliases: ["most", "m", "show-most"],
@@ -22,7 +24,9 @@ class ShowMostCommand extends Command {
         const emojiManager = msg.guild.emojis;
         const emojis = await this.emojiRepo.find({
             where: {
-                guildId: msg.guild.id,
+                guild: await this.guildRepo.findOne({
+                    id: msg.guild.id,
+                }),
             },
             order: {
                 frequency: "DESC",

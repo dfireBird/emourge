@@ -2,9 +2,11 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { getRepository } from "typeorm";
 import { Emoji } from "../entities/Emoji";
+import { Guild } from "../entities/Guild";
 
 class ShowAnimatedCommand extends Command {
     private emojiRepo = getRepository(Emoji);
+    private guildRepo = getRepository(Guild);
     constructor() {
         super("show-animated", {
             aliases: [
@@ -28,7 +30,9 @@ class ShowAnimatedCommand extends Command {
         const emojiManager = msg.guild.emojis;
         const emojis = await this.emojiRepo.find({
             where: {
-                guildId: msg.guild.id,
+                guild: await this.guildRepo.findOne({
+                    id: msg.guild.id,
+                }),
                 animated: true,
             },
             order: {

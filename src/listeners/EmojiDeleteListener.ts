@@ -17,7 +17,6 @@ export default class EmojiDeleteListener extends Listener {
     public async exec(emoji: GuildEmoji) {
         const dbEmoji = await this.emojiRepository.findOne({
             id: emoji.id,
-            guildId: emoji.guild.id,
         });
         if (dbEmoji === undefined) return;
 

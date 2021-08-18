@@ -15,7 +15,6 @@ export default class EmojiUpdateListener extends Listener {
     public async exec(old_emoji: GuildEmoji, new_emoji: GuildEmoji) {
         const oldDbEmoji = await this.emojiRepository.findOne({
             id: old_emoji.id,
-            guildId: old_emoji.guild.id,
         });
         if (oldDbEmoji === undefined) return;
 

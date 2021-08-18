@@ -29,7 +29,8 @@ class InitCommand extends Command {
                 animated: emoji.animated,
                 frequency: 0,
             });
-            guildEmojis.push(await this.emojiRepo.save(newEmoji));
+            guildEmojis.push(newEmoji);
+            await this.emojiRepo.save(newEmoji);
         }
         const guild = this.guildRepo.create({
             id: msg.guild.id,

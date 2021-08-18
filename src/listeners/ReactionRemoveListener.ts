@@ -24,7 +24,6 @@ export default class ReactionRemoveListener extends Listener {
         if (emoji === null) return;
         const dbEmoji = await this.emojiRepo.findOne({
             id: emoji.id,
-            guildId: msg.guild.id,
         });
 
         if (dbEmoji === undefined) return;
