@@ -18,7 +18,7 @@ class InitCommand extends Command {
             return;
         }
         const emojis = msg.guild.emojis.cache;
-        if ((await this.guildRepo.findOne(msg.guild.id)) === undefined) {
+        if ((await this.guildRepo.findOne(msg.guild.id)) !== undefined) {
             return msg.channel.send("**Already Initialized**");
         }
         const guildEmojis: Emoji[] = [];
